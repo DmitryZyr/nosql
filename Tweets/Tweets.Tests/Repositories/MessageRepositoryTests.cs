@@ -252,11 +252,13 @@ namespace Tweets.Tests.Repositories
         public void GetMessages_MessagesWithLikes_ShouldOrderByCreateDate()
         {
             var user = fixture.Create<User>();
-            var messageDocument1 = fixture.Build<MessageDocument>().With(d => d.UserName, user.Name).With(d => d.CreateDate, DateTime.UtcNow).Create();
-            Insert(messageDocument1);
-            var messageDocument2 =
-                fixture.Build<MessageDocument>().With(d => d.UserName, user.Name).With(d => d.CreateDate, DateTime.UtcNow.AddDays(1)).Create();
-            Insert(messageDocument2);
+            //Переписал тест, т.к. он работал нестабильно. При вызове метода Insert не гарантируется, что 
+            //сообщения добавятся в том же порядке. Иногда тест проходит, если в методе GetMessages не делать сортировки по дате.
+            for (int i = 0; i < 10; i++)
+            {
+                var messageDocument1 = fixture.Build<MessageDocument>().With(d => d.UserName, user.Name).With(d => d.CreateDate, DateTime.UtcNow.AddDays(i)).Create();
+                Insert(messageDocument1);
+            }
 
             var actual = sut.GetMessages(user);
 
