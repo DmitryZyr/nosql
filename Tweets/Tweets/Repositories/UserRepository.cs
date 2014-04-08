@@ -33,10 +33,9 @@ namespace Tweets.Repositories
         public User Get(string userId)
         {
             var result = riakClient.Get(bucketName, userId);
-            CheckResult(result);
-            var userDocument = result.Value.GetObject<UserDocument>();
-            if (userDocument == null)
+            if (!result.IsSuccess)
                 return null;
+            var userDocument = result.Value.GetObject<UserDocument>();
             return userMapper.Map(userDocument);
         }
 
