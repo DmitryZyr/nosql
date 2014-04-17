@@ -1,0 +1,2 @@
+db.messages.ensureIndex({"userName": 1});
+db.messages.ensureIndex({"likes": 1});
