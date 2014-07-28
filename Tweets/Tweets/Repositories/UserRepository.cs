@@ -10,17 +10,15 @@ namespace Tweets.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly string bucketName;
-        private readonly IRiakClient riakClient;
+        private readonly RedisClient redisClient;
         private readonly IMapper<User, UserDocument> userDocumentMapper;
         private readonly IMapper<UserDocument, User> userMapper;
 
-        public UserRepository(IRiakClient riakClient, IMapper<User, UserDocument> userDocumentMapper, IMapper<UserDocument, User> userMapper)
+        public UserRepository(RedisClient redisClient, IMapper<User, UserDocument> userDocumentMapper, IMapper<UserDocument, User> userMapper)
         {
-            this.riakClient = riakClient;
+            this.redisClient = redisClient;
             this.userDocumentMapper = userDocumentMapper;
             this.userMapper = userMapper;
-            bucketName = typeof (UserDocument).GetCustomAttribute<BucketNameAttribute>().BucketName;
         }
 
         public void Save(User user)
